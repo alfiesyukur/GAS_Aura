@@ -1,4 +1,4 @@
-// Copyright sf5gaming
+// Copyright sf5gaming.asia
 
 #pragma once
 
@@ -16,4 +16,8 @@ class AURA_API AAuraCharacter : public AAuraCharacterBase
 public:
 
 	AAuraCharacter();
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+private:
+	void InitAbilityActorInfo();
 };
