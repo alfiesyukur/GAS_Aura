@@ -9,3 +9,13 @@ void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerPar
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.AttributeSet;
 }
+
+void UAuraWidgetController::BroadcastInitialValues()
+{
+	// Empty for Brevity
+}
+
+void UAuraWidgetController::BindCallbacksToDependencies()
+{
+	// Empty for Brevity
+}
