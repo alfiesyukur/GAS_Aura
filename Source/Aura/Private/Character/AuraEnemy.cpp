@@ -39,3 +39,10 @@ void AAuraEnemy::BeginPlay()
 	Super::BeginPlay();
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }
+
+void AAuraEnemy::InitAbilityActorInfo()
+{
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+
+	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+}
