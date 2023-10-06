@@ -1,6 +1,5 @@
 // Copyright sf5gaming.asia
 
-
 #include "Character/AuraCharacter.h"
 
 #include "AbilitySystemComponent.h"
@@ -56,6 +55,6 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-
-	InitializePrimaryAttribute();
+	
+	InitializeDefaultAttributes();
 }
