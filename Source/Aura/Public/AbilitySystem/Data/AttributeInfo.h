@@ -8,7 +8,7 @@
 #include "AttributeInfo.generated.h"
 
 USTRUCT(BlueprintType)
-struct  FAuraAttributeInfo
+struct FAuraAttributeInfo
 {
 	GENERATED_BODY()
 
