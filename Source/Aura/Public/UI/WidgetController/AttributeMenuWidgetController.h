@@ -24,10 +24,12 @@ public:
 	virtual void BroadcastInitialValues() override;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
-	FAttributeInfoSignature  AttributeInfoDelegate;
+	FAttributeInfoSignature AttributeInfoDelegate;
 
 protected:
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAttributeInfo> AttributeInfo;	
-};
+	TObjectPtr<UAttributeInfo> AttributeInfo;
 
+private:
+	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;
+};
