@@ -31,7 +31,7 @@ void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGam
 	*************************************************************************************************/
 
 	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
-
+	
 	if (TargetASC == nullptr) return;
 
 	check(GameplayEffectClass);
@@ -52,8 +52,7 @@ void AAuraEffectActor::OnEverlap(AActor* TargetActor)
 	if (InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap) {
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
 	}
-
-
+	
 	if (DurationEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap) {
 		ApplyEffectToTarget(TargetActor, DurationGameplayEffectClass);
 	}
