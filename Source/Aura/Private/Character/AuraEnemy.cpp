@@ -45,7 +45,6 @@ int32 AAuraEnemy::GetPlayerLevel()
 	return Level;
 }
 
-
 void AAuraEnemy::BeginPlay()
 {
 	Super::BeginPlay();
@@ -93,6 +92,12 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+}
+
+void AAuraEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();	
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
