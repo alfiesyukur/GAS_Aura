@@ -33,6 +33,7 @@ public:
 	/** end Combat Interface */
 
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	
 	virtual void Die() override;
 
 	UPROPERTY(BlueprintAssignable)
