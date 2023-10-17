@@ -1,4 +1,4 @@
-// Copyright sf5gaming
+// Copyright sf5gaming.asia
 
 
 #include "Character/AuraEnemy.h"
@@ -21,7 +21,6 @@ AAuraEnemy::AAuraEnemy()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 
 	AttributeSet = CreateDefaultSubobject<UAuraAttributeSet>("AttributeSet");
-
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
 }
@@ -44,13 +43,17 @@ int32 AAuraEnemy::GetPlayerLevel()
 {
 	return Level;
 }
+void AAuraEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();	
+}
 
 void AAuraEnemy::BeginPlay()
 {
-	Super::BeginPlay();
+	Super::BeginPlay();	
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;	
-	InitAbilityActorInfo();
-
+	InitAbilityActorInfo();	
 	UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 
 	if (UAuraUserWidget* AuraUserWidget = Cast<UAuraUserWidget>(HealthBar->GetUserWidgetObject()))
@@ -79,8 +82,8 @@ void AAuraEnemy::BeginPlay()
 		AbilitySystemComponent->RegisterGameplayTagEvent(
 			FAuraGameplayTags::Get().Effects_HitReact,
 			EGameplayTagEventType::NewOrRemoved).AddUObject(
-			this,
-			&AAuraEnemy::HitReactTagChanged
+				this,
+				&AAuraEnemy::HitReactTagChanged
 		);
 
 		OnHealthChanged.Broadcast(AuraAS->GetHealth());
@@ -94,23 +97,17 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
 }
 
-void AAuraEnemy::Die()
-{
-	SetLifeSpan(LifeSpan);
-	Super::Die();	
-}
-
 void AAuraEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-
+	
 	InitializeDefaultAttributes();
 }
 
 void AAuraEnemy::InitializeDefaultAttributes() const
 {
-	UAuraAbilitySystemLibrary::InitializeDefaultAttribute(
+	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(
 		this,
 		CharacterClass,
 		Level,

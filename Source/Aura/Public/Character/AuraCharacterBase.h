@@ -45,8 +45,7 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-	virtual void InitAbilityActorInfo();
-	
+	virtual void InitAbilityActorInfo();	
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
@@ -60,6 +59,7 @@ protected:
 	virtual FVector GetCombatSocketLocation() override;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
+
 	virtual void InitializeDefaultAttributes() const;
 
 	void AddCharacterAbilities();
@@ -81,8 +81,7 @@ protected:
 	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 	
 	
-private:
-	
+private:	
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 
