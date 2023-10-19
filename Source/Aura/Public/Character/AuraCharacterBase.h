@@ -25,6 +25,7 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;	
+
 	virtual void Die() override;
 
 	UFUNCTION(NetMulticast, Reliable)
