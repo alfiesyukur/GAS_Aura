@@ -1,4 +1,4 @@
-// Copyright sf5gaming.asia
+// Copyright www.sf5gaming.asia
 
 #include "Character/AuraCharacterBase.h"
 #include "AbilitySystemComponent.h"
