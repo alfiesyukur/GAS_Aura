@@ -11,7 +11,7 @@ class UGameplayEffect;
 class UAbilitySystemComponent;
 
 UENUM(BlueprintType)
-enum class EEffectApplicationPolicy 
+enum class EEffectApplicationPolicy
 {
 	ApplyOnOverlap,
 	ApplyOnEndOverlap,
@@ -21,7 +21,7 @@ enum class EEffectApplicationPolicy
 UENUM(BlueprintType)
 enum class EEffectRemovalPolicy
 {
-	RemoveOnEndOverlap,	
+	RemoveOnEndOverlap,
 	DoNotRemove
 };
 
@@ -29,24 +29,28 @@ UCLASS()
 class AURA_API AAuraEffectActor : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:
 	AAuraEffectActor();
-	
+
 protected:
 	virtual void BeginPlay() override;
-
-	UFUNCTION(BlueprintCallable)
-	void OnEverlap(AActor* TargetActor);
 	
+	UFUNCTION(BlueprintCallable)
+	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
+	
+	UFUNCTION(BlueprintCallable)
+	void OnOverlap(AActor* TargetActor);
+
 	UFUNCTION(BlueprintCallable)
 	void OnEndOverlap(AActor* TargetActor);
 
-	UFUNCTION(BlueprintCallable)
-	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
-	bool bDestroyOnEffectRemoval = false;
+	bool bDestroyOnEffectApplication = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	bool bApplyEffectToEnemies = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
@@ -73,5 +77,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	float ActorLevel = 1.f;
-	
 };

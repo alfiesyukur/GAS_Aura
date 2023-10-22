@@ -1,4 +1,4 @@
-// Copyright www.sf5gaming.asia
+// Copyright sf5gaming.asia
 
 #include "Character/AuraCharacterBase.h"
 #include "AbilitySystemComponent.h"
@@ -49,6 +49,7 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Dissolve();
+	bDead = true;
 }
 
 void AAuraCharacterBase::BeginPlay()
@@ -58,12 +59,24 @@ void AAuraCharacterBase::BeginPlay()
 
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
+	// Empty
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation()
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
+{	
+	check(Weapon);	
+	return Weapon->GetSocketLocation(WeaponTipSocketName);;
+	
+}
+
+bool AAuraCharacterBase::IsDead_Implementation() const
 {
-	check(Weapon);
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	return bDead;
+}
+
+AActor* AAuraCharacterBase::GetAvatar_Implementation()
+{
+	return this;
 }
 
 void AAuraCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const

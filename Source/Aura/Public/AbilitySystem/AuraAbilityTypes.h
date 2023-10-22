@@ -2,7 +2,6 @@
 
 #pragma once
 #include "CoreMinimal.h"
-
 #include "GameplayEffectTypes.h"
 #include  "AuraAbilityTypes.generated.h"
 
