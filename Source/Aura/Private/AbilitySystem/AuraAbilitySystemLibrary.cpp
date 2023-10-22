@@ -167,10 +167,8 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithRadius(const UObject* WorldCont
 		                                SphereParams);
 
 		for (FOverlapResult Overlap : Overlaps)
-		{
-			const bool bImplementsCombatInterface = Overlap.GetActor()->Implements<UCombatInterface>();
-			const bool bIsAlive = !ICombatInterface::Execute_IsDead(Overlap.GetActor());
-			if (bImplementsCombatInterface && bIsAlive)
+		{			
+			if (Overlap.GetActor()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(Overlap.GetActor()))
 			{
 				OutOverlappingActors.AddUnique(ICombatInterface::Execute_GetAvatar(Overlap.GetActor()));
 			}
