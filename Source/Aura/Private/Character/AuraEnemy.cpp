@@ -47,11 +47,6 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), true);
 }
 
-FVector AAuraEnemy::GetCombatSocketLocation_Implementation()
-{
-	return Super::GetCombatSocketLocation_Implementation();
-}
-
 void AAuraEnemy::HighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(true);
@@ -136,7 +131,9 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
-	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+
+	if (AuraAIController && AuraAIController->GetBlackboardComponent())
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AAuraEnemy::InitAbilityActorInfo()
