@@ -115,7 +115,6 @@ bool UAuraAbilitySystemLibrary::IsBlockedHit(const FGameplayEffectContextHandle&
 	{
 		return AuraEffectContext->IsBlockedHit();
 	}
-
 	return false;
 }
 
@@ -167,8 +166,9 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithRadius(const UObject* WorldCont
 		                                SphereParams);
 
 		for (FOverlapResult Overlap : Overlaps)
-		{			
-			if (Overlap.GetActor()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(Overlap.GetActor()))
+		{
+			if (Overlap.GetActor()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(
+				Overlap.GetActor()))
 			{
 				OutOverlappingActors.AddUnique(ICombatInterface::Execute_GetAvatar(Overlap.GetActor()));
 			}
@@ -176,17 +176,12 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithRadius(const UObject* WorldCont
 	}
 }
 
-bool UAuraAbilitySystemLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)
+bool UAuraAbilitySystemLibrary::IsNotFriend(const AActor* FirstActor, const AActor* SecondActor)
 {
-	const bool bFisrtIsPlayer = FirstActor->ActorHasTag(FName("Player"));
-	const bool bSecondIsPlayer = SecondActor->ActorHasTag(FName("Player"));
-	const bool bFisrtIsEnemy = FirstActor->ActorHasTag(FName("Enemy"));
-	const bool bSecondIsEnemy = SecondActor->ActorHasTag(FName("Enemy"));
-
-	const bool bBothArePlayers = bFisrtIsPlayer && bSecondIsPlayer;
-	const bool bBothAreEnemies = bFisrtIsEnemy && bSecondIsEnemy;
+	const bool bBothArePlayers = FirstActor->ActorHasTag(FName("Player")) && SecondActor->ActorHasTag(FName("Player"));
+	const bool bBothAreEnemies = FirstActor->ActorHasTag(FName("Enemy")) && SecondActor->ActorHasTag(FName("Enemy"));
 
 	const bool bFriends = bBothArePlayers || bBothAreEnemies;
 
-	return !bFriends;	
+	return !bFriends;
 }
