@@ -23,7 +23,7 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	if (!bIsServer) return;
 
 	const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(
-		GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().Montage_Attack_Weapon);
+		GetAvatarActorFromActorInfo(), FAuraGameplayTags::Get().CombatSocket_Weapon);
 	
 	FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 
@@ -67,11 +67,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, ScaledDamage);
 	}
-
-	/** OnScreenDebug for Damage magnitude.
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red,
-		FString::Printf(TEXT("Firebolt Damage :%f"), ScaledDamage));
-	*/
 
 	Projectile->DamageEffectSpecHandle = SpecHandle;
 
