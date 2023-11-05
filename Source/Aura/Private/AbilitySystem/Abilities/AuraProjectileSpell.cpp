@@ -49,7 +49,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 	const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
 		GetAvatarActorFromActorInfo());
 
-
 	FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
 
 	EffectContextHandle.SetAbility(this);

@@ -23,7 +23,7 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
@@ -113,7 +113,6 @@ protected:
 	TObjectPtr<USoundBase> DeathSound;
 
 	/* Minions */
-
 	int32 MinionCount = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Default")

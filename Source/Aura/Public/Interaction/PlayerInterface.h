@@ -17,14 +17,11 @@ class UPlayerInterface : public UInterface
 class AURA_API IPlayerInterface
 {
 	GENERATED_BODY()
-	
+
 public:
-	
 	UFUNCTION(BlueprintNativeEvent)
 	void AddToXP(int32 InXP);
 
-	UFUNCTION(BlueprintNativeEvent)
-	void LevelUp();
 
 	UFUNCTION(BlueprintNativeEvent)
 	int32 GetXP();
@@ -36,7 +33,7 @@ public:
 	int32 GetAttributePointsReward(int32 Level) const;
 
 	UFUNCTION(BlueprintNativeEvent)
-	int32 GetSpellPointsReward(int32 Level) const;	
+	int32 GetSpellPointsReward(int32 Level) const;
 
 	UFUNCTION(BlueprintNativeEvent)
 	void AddToPlayerLevel(int32 InPlayerLevel);
@@ -46,5 +43,13 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void AddToSpellPoints(int32 InSpellPoints);
-};
 
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetAttributePoints() const;
+
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetSpellPoints() const;
+
+	UFUNCTION(BlueprintNativeEvent)
+	void LevelUp();
+};

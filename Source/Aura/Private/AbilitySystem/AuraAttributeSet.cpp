@@ -8,6 +8,7 @@
 #include "Net/UnrealNetwork.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Aura/AuraLogChannel.h"
 #include "Interaction/CombatInterface.h"
 #include "Interaction/PlayerInterface.h"
 #include "Player/AuraPlayerController.h"
@@ -148,14 +149,12 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
-			const bool bFatal = NewHealth <= 0.f;
-			if (bFatal)
+			if (const bool bFatal = NewHealth <= 0.f)
 			{
-				ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
-				if (CombatInterface)
+				if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor))
 				{
 					CombatInterface->Die();
-				}
+				}				
 				SendXPEvent(Props);
 			}
 			else
@@ -176,7 +175,8 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0.f);
-		//UE_LOG(LogAura, Log, TEXT("incoming XP: %f"), LocalIncomingXP);
+
+		UE_LOG(LogAura, Log, TEXT("incoming XP: %f"), LocalIncomingXP);
 
 		// TODO: See if we should level up.
 		// Source Character is the owner, since GA_ListenForEvents Applies GE_EventBasedEffect, adding to IncomingXP
@@ -190,7 +190,34 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				Props.SourceCharacter, CurrentXP + LocalIncomingXP);
 			const int32 NumLevelUps = NewLevel - CurrentLevel;
 
-			if (NumLevelUps > 0)
+			UE_LOG(LogAura, Log, TEXT("Number of LevelUps: %i"), NumLevelUps);
+
+			int32 CurrentLevelUp = 1;
+			
+			while (CurrentLevelUp <= NumLevelUps && NumLevelUps > 0)
+			{
+				const int32 AttributePointsReward = IPlayerInterface::Execute_GetAttributePointsReward(
+					Props.SourceCharacter, CurrentLevel + 1);
+				const int32 SpellPointsReward = IPlayerInterface::Execute_GetSpellPointsReward(
+					Props.SourceCharacter, CurrentLevel + 1);
+
+				IPlayerInterface::Execute_AddToPlayerLevel(Props.SourceCharacter, 1);
+				IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, AttributePointsReward);
+				IPlayerInterface::Execute_AddToSpellPoints(Props.SourceCharacter, SpellPointsReward);
+
+
+				if (CurrentLevelUp == NumLevelUps)
+				{
+					SetHealth(GetMaxHealth());
+					SetMana(GetMaxMana());
+
+					IPlayerInterface::Execute_LevelUp(Props.SourceCharacter);
+				}
+				
+				CurrentLevelUp++;
+			}
+
+			/*if (NumLevelUps > 0)
 			{
 				const int32 AttributePointsReward = IPlayerInterface::Execute_GetAttributePointsReward(
 					Props.SourceCharacter, CurrentLevel);
@@ -205,12 +232,13 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				SetMana(GetMaxMana());
 
 				IPlayerInterface::Execute_LevelUp(Props.SourceCharacter);
-			}
+			}*/
 
 			IPlayerInterface::Execute_AddToXP(Props.SourceCharacter, LocalIncomingXP);
 		}
 	}
 }
+
 void UAuraAttributeSet::SendXPEvent(const FEffectProperties& Props) const
 {
 	if (Props.TargetCharacter->Implements<UCombatInterface>())
