@@ -10,14 +10,7 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 	const float DeltaSpread = SpawnSpread / NumMinions;
 	const FVector RightOfSpread = Forward.RotateAngleAxis(SpawnSpread / 2.f, FVector::UpVector);
 
-	/**
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
-	                                     Location,
-	                                     Location + RightOfSpread * MaxSpawnDistance,
-	                                     8.f,
-	                                     FLinearColor::Green,
-	                                     1.f);
-	**/
+
 
 	TArray<FVector> SpawnLocations;
 
