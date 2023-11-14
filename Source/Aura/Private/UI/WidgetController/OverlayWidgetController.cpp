@@ -23,6 +23,7 @@ void UOverlayWidgetController::BroadcastInitialValues()
 	OnMaxHealthChanged.Broadcast(GetAuraAS()->GetMaxHealth());
 	OnManaChanged.Broadcast(GetAuraAS()->GetMana());
 	OnMaxManaChanged.Broadcast(GetAuraAS()->GetMaxMana());
+	OnXPChanged(0.f);
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()

@@ -40,6 +40,7 @@ void UAuraWidgetController::BroadcastAbilityInfo()
 		// TODO: Need a way to figure out the ability tag for the given ability spec.
 		FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(GetAuraASC()->GetAbilityTagFromSpec(AbilitySpec));
 		Info.InputTag = GetAuraASC()->GetInputTagFromSpec(AbilitySpec);
+		Info.StatusTag = AuraAbilitySystemComponent->GetStatusTagFromSpec(AbilitySpec);
 		AbilityInfoDelegate.Broadcast(Info);
 	});
 

@@ -63,7 +63,7 @@ private:
 	int32 XP = 1;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_AttributePoints)
-	int32 AttributePoints = 31;
+	int32 AttributePoints = 0;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_SpellPoints)
 	int32 SpellPoints = 0;
