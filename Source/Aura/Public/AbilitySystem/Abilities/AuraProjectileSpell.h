@@ -16,7 +16,7 @@ struct FGameplayTag;
 UCLASS()
 class AURA_API UAuraProjectileSpell : public UAuraDamageGameplayAbility
 {
-	GENERATED_BODY()
+	GENERATED_BODY()	
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
@@ -29,4 +29,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<AAuraProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly)
+	int32 NumProjectiles = 5;
 };
