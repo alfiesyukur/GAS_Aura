@@ -86,8 +86,11 @@ public:
 		meta = (DefaultToSelf = "WorldContextObject"))
 	static bool IsNotFriend(const AActor* FirstActor, const AActor* SecondActor);
 
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|DamageEffect")
+	static FGameplayEffectContextHandle ApplyDamageEffect(const FDamageEffectParams& DamageEffectParams);
+
 	UFUNCTION(BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics",
-		meta = (DefaultToSelf = "WorldContextObject"))
+		meta = (DefaultToSelf = "WorldContextObject"))	
 	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterClass CharacterClass,
 	                                         int32 CharacterLevel);
 };

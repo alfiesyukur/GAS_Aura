@@ -50,7 +50,7 @@ int32 AAuraCharacterBase::GetMinionCount_Implementation()
 
 void AAuraCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
 {
-	MinionCount+=Amount;
+	MinionCount += Amount;
 }
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
@@ -83,8 +83,8 @@ void AAuraCharacterBase::InitAbilityActorInfo()
 FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
 	//TODO Return the correct socket based on Montage Tag.
-	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();	
-		
+	const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+
 	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Weapon) && IsValid(Weapon))
 	{
 		return Weapon->GetSocketLocation(WeaponTipSocketName);
@@ -163,7 +163,7 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
 }
 
-void AAuraCharacterBase::AddCharacterAbilities()
+void AAuraCharacterBase::AddCharacterAbilities() const
 {
 	UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	if (!HasAuthority()) return;

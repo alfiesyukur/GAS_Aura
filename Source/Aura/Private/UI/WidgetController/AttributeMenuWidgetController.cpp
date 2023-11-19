@@ -1,6 +1,5 @@
 // Copyright sf5gaming.asia
 
-
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
@@ -11,7 +10,6 @@
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
-	//UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
 	check(AttributeInfo);
 
 	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : GetAuraAS()->TagsToAttributes)
@@ -24,7 +22,6 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 		);
 	}
 
-	//AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	GetAuraPS()->OnAttributePointsChangedDelegate.AddLambda([this](int32 Points)
 		{
 			AttributePointsChangedDelegate.Broadcast(Points);
@@ -34,7 +31,6 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 
 void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
-	//UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
 	check(AttributeInfo);
 
 	for (TTuple<FGameplayTag, FGameplayAttribute(*)()>& Pair : GetAuraAS()->TagsToAttributes)
@@ -42,13 +38,11 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 		BroadcastAttributeInfo(Pair.Key, Pair.Value());
 	}
 
-	//const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	AttributePointsChangedDelegate.Broadcast(GetAuraPS()->GetAttributePoints());
 }
 
 void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
-	//UAuraAbilitySystemComponent* AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	GetAuraASC()->UpgradeAttribute(AttributeTag);
 }
 

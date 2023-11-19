@@ -29,10 +29,7 @@ void UAuraWidgetController::BindCallbacksToDependencies()
 void UAuraWidgetController::BroadcastAbilityInfo()
 {
 	// TODO: Get Information about all given abilities, leak up their ability info, and broadcast it to the widgets.
-	if (!GetAuraASC()->bStartAbilitiesGiven)
-	{
-		return;
-	}
+	if (!GetAuraASC()->bStartAbilitiesGiven) return;
 
 	FForEachAbility BroadcastDelegate;
 	BroadcastDelegate.BindLambda([this](const FGameplayAbilitySpec& AbilitySpec)
@@ -40,7 +37,7 @@ void UAuraWidgetController::BroadcastAbilityInfo()
 		// TODO: Need a way to figure out the ability tag for the given ability spec.
 		FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(GetAuraASC()->GetAbilityTagFromSpec(AbilitySpec));
 		Info.InputTag = GetAuraASC()->GetInputTagFromSpec(AbilitySpec);
-		Info.StatusTag = AuraAbilitySystemComponent->GetStatusTagFromSpec(AbilitySpec);
+		Info.StatusTag = AuraAbilitySystemComponent->GetStatusFromSpec(AbilitySpec);
 		AbilityInfoDelegate.Broadcast(Info);
 	});
 

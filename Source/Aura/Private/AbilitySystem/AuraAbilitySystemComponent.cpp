@@ -28,7 +28,6 @@ void UAuraAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf
 		}
 	}
 	bStartAbilitiesGiven = true;
-	//AbilitiesGivenDelegate.Broadcast(this);
 	AbilitiesGivenDelegate.Broadcast();
 }
 
@@ -97,7 +96,6 @@ FGameplayTag UAuraAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayA
 			}
 		}
 	}
-
 	return FGameplayTag();
 }
 
@@ -113,7 +111,7 @@ FGameplayTag UAuraAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbi
 	return FGameplayTag();
 }
 
-FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+FGameplayTag UAuraAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec)
 {
 	for (FGameplayTag StatusTag : AbilitySpec.DynamicAbilityTags)
 	{
@@ -129,8 +127,7 @@ FGameplayTag UAuraAbilitySystemComponent::GetStatusFromAbilityTag(const FGamepla
 {
 	if (const FGameplayAbilitySpec* Spec = GetSpecFromAbilityTag(AbilityTag))
 	{
-		//return GetStatusFromSpec(*Spec);
-		return GetStatusTagFromSpec(*Spec);
+		return GetStatusFromSpec(*Spec);
 	}
 	return FGameplayTag();
 }
@@ -157,7 +154,6 @@ FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFromAbilityTag(const F
 			}
 		}
 	}
-
 	return nullptr;
 }
 
@@ -195,7 +191,7 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 		}
 
 		const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
-		FGameplayTag Status = GetStatusTagFromSpec(*AbilitySpec);
+		FGameplayTag Status = GetStatusFromSpec(*AbilitySpec);
 		if (Status.MatchesTagExact(GameplayTags.Abilities_Status_Eligible))
 		{
 			AbilitySpec->DynamicAbilityTags.RemoveTag(GameplayTags.Abilities_Status_Eligible);
@@ -220,8 +216,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
 		const FGameplayTag& PrevSlot = GetInputTagFromSpec(*AbilitySpec);
 
-		//const FGameplayTag& Status = GetStatusFromSpec(*AbilitySpec);
-		const FGameplayTag& Status = GetStatusTagFromSpec(*AbilitySpec);
+		const FGameplayTag& Status = GetStatusFromSpec(*AbilitySpec);
 
 		const bool bStatusValid = Status == GameplayTags.Abilities_Status_Equipped || Status == GameplayTags.
 			Abilities_Status_Unlocked;
@@ -245,7 +240,7 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 }
 
 void UAuraAbilitySystemComponent::ClientEquipAbility(const FGameplayTag& AbilityTag, const FGameplayTag& Status,
-                                                     const FGameplayTag& Slot, const FGameplayTag& PreviousSlot)
+                                                     const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const
 {
 	AbilityEquipped.Broadcast(AbilityTag, Status, Slot, PreviousSlot);
 }
@@ -284,9 +279,6 @@ bool UAuraAbilitySystemComponent::GetDescriptionByAbilityTag(const FGameplayTag&
 	}
 
 	UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
-
-	//OutDescription = UAuraGameplayAbility::GetLockedDescription(
-	//	AbilityInfo->FindAbilityInfoForTag(AbilityTag).LevelRequirement);
 
 	if (!AbilityTag.IsValid() || AbilityTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_None))
 	{
@@ -339,7 +331,6 @@ void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 	if (!bStartAbilitiesGiven)
 	{
 		bStartAbilitiesGiven = true;
-		//AbilitiesGivenDelegate.Broadcast(this);
 		AbilitiesGivenDelegate.Broadcast();
 	}
 }

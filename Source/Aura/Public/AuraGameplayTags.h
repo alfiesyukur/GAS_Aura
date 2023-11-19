@@ -21,7 +21,7 @@ public:
 	FGameplayTag Attributes_Primary_Strength;
 	FGameplayTag Attributes_Primary_Intelligence;
 	FGameplayTag Attributes_Primary_Resilience;
-	FGameplayTag Attributes_Primary_Vigor;	
+	FGameplayTag Attributes_Primary_Vigor;
 
 	// Secondary Attribute GameplayTags
 	FGameplayTag Attributes_Secondary_Armor;
@@ -34,12 +34,7 @@ public:
 	FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_Secondary_MaxHealth;
 	FGameplayTag Attributes_Secondary_MaxMana;
-
-	FGameplayTag Attributes_Resistance_Fire;
-	FGameplayTag Attributes_Resistance_Lightning;
-	FGameplayTag Attributes_Resistance_Arcane;
-	FGameplayTag Attributes_Resistance_Physical;
-
+	
 	FGameplayTag Attributes_Meta_IncomingXP;
 
 	FGameplayTag InputTag_LMB;
@@ -56,7 +51,22 @@ public:
 	FGameplayTag Damage_Fire;
 	FGameplayTag Damage_Lightning;
 	FGameplayTag Damage_Arcane;
-	FGameplayTag Damage_Physical;	
+	FGameplayTag Damage_Physical;
+	
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Arcane;
+	FGameplayTag Attributes_Resistance_Physical;
+	
+	FGameplayTag Debuff_Burn;
+	FGameplayTag Debuff_Stun;
+	FGameplayTag Debuff_Arcane;
+	FGameplayTag Debuff_Physical;
+
+	FGameplayTag Debuff_Chance;
+	FGameplayTag Debuff_Damage;
+	FGameplayTag Debuff_Duration;
+	FGameplayTag Debuff_Frequency;
 
 	FGameplayTag Abilities_Attack;
 	FGameplayTag Abilities_Summon;
@@ -70,11 +80,11 @@ public:
 
 	FGameplayTag Abilities_Type_None;
 	FGameplayTag Abilities_Type_Offensive;
-	FGameplayTag Abilities_Type_Passive;	
+	FGameplayTag Abilities_Type_Passive;
 
 	FGameplayTag Abilities_Fire_Firebolt;
-	FGameplayTag Abilities_Lightning_Electrocute;	
-	
+	FGameplayTag Abilities_Lightning_Electrocute;
+
 	FGameplayTag Cooldown_Fire_Firebolt;
 
 	FGameplayTag CombatSocket_Weapon;
@@ -86,8 +96,10 @@ public:
 	FGameplayTag Montage_Attack_2;
 	FGameplayTag Montage_Attack_3;
 	FGameplayTag Montage_Attack_4;
+
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuffs;
 	
-	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;	
 	FGameplayTag Effects_HitReact;
 
 private:

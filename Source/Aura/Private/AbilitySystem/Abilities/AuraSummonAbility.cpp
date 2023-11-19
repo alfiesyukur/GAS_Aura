@@ -38,22 +38,9 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations()
 			ChosenSpawnLocation = Hit.ImpactPoint;
 
 		SpawnLocations.Add(ChosenSpawnLocation);
-
-		//DrawDebugSphere(GetWorld(), ChosenSpawnLocation,
-		//			15.f, 12, FColor::Orange, false, 1.f);
 	}
 
 	const FVector LeftOfSpread = Forward.RotateAngleAxis(-SpawnSpread / 2.f, FVector::UpVector);
-
-	/**
-	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
-	                                     Location,
-	                                     Location + LeftOfSpread * MaxSpawnDistance,
-	                                     8.f,
-	                                     FLinearColor::Red,
-	                                     1.f);
-	**/
-
 	return SpawnLocations;
 }
 

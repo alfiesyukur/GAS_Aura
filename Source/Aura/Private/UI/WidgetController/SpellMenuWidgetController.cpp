@@ -1,7 +1,6 @@
 // Copyright sf5gaming.asia
 
 #include "UI/WidgetController/SpellMenuWidgetController.h"
-
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
@@ -48,10 +47,14 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 
 		bool bEnableSpellPoints = false;
 		bool bEnableEquip = false;
+		ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints,
+			bEnableSpellPoints, bEnableEquip);
+		
 		FString Description;
 		FString NextLevelDescription;
 		GetAuraASC()->GetDescriptionByAbilityTag(SelectedAbility.Ability, Description, NextLevelDescription);
-		ShouldEnableButtons(SelectedAbility.Status, CurrentSpellPoints, bEnableSpellPoints, bEnableEquip);
+
+
 		SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPoints, bEnableEquip,
 		                                     Description, NextLevelDescription);
 	});
@@ -81,7 +84,7 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
 	}
 	else
 	{
-		AbilityStatus = GetAuraASC()->GetStatusTagFromSpec(*AbilitySpec);
+		AbilityStatus = GetAuraASC()->GetStatusFromSpec(*AbilitySpec);
 	}
 
 	SelectedAbility.Ability = AbilityTag;
@@ -89,10 +92,11 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
 
 	bool bEnableSpellPoints = false;
 	bool bEnableEquip = false;
+	ShouldEnableButtons(AbilityStatus, SpellPoints, bEnableSpellPoints, bEnableEquip);
 	FString Description;
 	FString NextLevelDescription;
 	GetAuraASC()->GetDescriptionByAbilityTag(AbilityTag, Description, NextLevelDescription);
-	ShouldEnableButtons(AbilityStatus, SpellPoints, bEnableSpellPoints, bEnableEquip);
+	
 	SpellGlobeSelectedDelegate.Broadcast(bEnableSpellPoints, bEnableEquip,
 	                                     Description, NextLevelDescription);
 }
@@ -117,7 +121,7 @@ void USpellMenuWidgetController::GlobeDeselect()
 	SelectedAbility.Status = FAuraGameplayTags::Get().Abilities_Status_Locked;
 
 	SpellGlobeSelectedDelegate.Broadcast(false, false,
-		FString(), FString());
+	                                     FString(), FString());
 }
 
 void USpellMenuWidgetController::EquipButtonPressed()
@@ -174,25 +178,30 @@ void USpellMenuWidgetController::ShouldEnableButtons(const FGameplayTag& Ability
                                                      bool& bShouldEnableEquipButton)
 {
 	const FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+	bShouldEnableSpellPointsButton = false;
+	bShouldEnableEquipButton = false;
 
 	if (AbilityStatus.MatchesTagExact(GameplayTags.Abilities_Status_Equipped))
 	{
 		bShouldEnableEquipButton = true;
-		if (SpellPoints > 0) { bShouldEnableSpellPointsButton = true; }
+		if (SpellPoints > 0)
+		{
+			bShouldEnableSpellPointsButton = true;
+		}
 	}
 	else if (AbilityStatus.MatchesTagExact(GameplayTags.Abilities_Status_Eligible))
 	{
-		bShouldEnableEquipButton = false;
-		if (SpellPoints > 0) { bShouldEnableSpellPointsButton = true; }
+		if (SpellPoints > 0)
+		{
+			bShouldEnableSpellPointsButton = true;
+		}
 	}
 	else if (AbilityStatus.MatchesTagExact(GameplayTags.Abilities_Status_Unlocked))
 	{
 		bShouldEnableEquipButton = true;
-		if (SpellPoints > 0) { bShouldEnableSpellPointsButton = true; }
-	}
-	else if (AbilityStatus.MatchesTagExact(GameplayTags.Abilities_Status_Locked))
-	{
-		bShouldEnableEquipButton = false;
-		if (SpellPoints > 0) { bShouldEnableSpellPointsButton = false; }
+		if (SpellPoints > 0)
+		{
+			bShouldEnableSpellPointsButton = true;
+		}
 	}
 }
