@@ -8,6 +8,7 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "Aura/AuraLogChannel.h"
+#include "Interaction/CombatInterface.h"
 #include "Interaction/PlayerInterface.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
@@ -203,6 +204,7 @@ void UAuraAbilitySystemComponent::ServerSpendSpellPoint_Implementation(const FGa
 		{
 			AbilitySpec->Level += 1;
 		}
+
 		ClientUpdateAbilityStatus(AbilityTag, Status, AbilitySpec->Level);
 		MarkAbilitySpecDirty(*AbilitySpec);
 	}
@@ -233,8 +235,10 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 				AbilitySpec->DynamicAbilityTags.RemoveTag(GameplayTags.Abilities_Status_Unlocked);
 				AbilitySpec->DynamicAbilityTags.AddTag(GameplayTags.Abilities_Status_Equipped);
 			}
+
 			MarkAbilitySpecDirty(*AbilitySpec);
 		}
+
 		ClientEquipAbility(AbilityTag, GameplayTags.Abilities_Status_Equipped, Slot, PrevSlot);
 	}
 }
@@ -261,6 +265,16 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 				MarkAbilitySpecDirty(AbilitySpec);
 				ClientUpdateAbilityStatus(Info.AbilityTag, FAuraGameplayTags::Get().Abilities_Status_Eligible, 1);
 			}
+			else
+			{
+				FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(Info.AbilityTag);
+				
+				UE_LOG(LogAura, Log, TEXT("Ability: %s, Level: %d"), *AbilitySpec->Ability->GetName(),
+				       AbilitySpec->Ability->GetAbilityLevel());
+				
+				ClientUpdateAbilityStatus(Info.AbilityTag, FAuraGameplayTags::Get().Abilities_Status_Unlocked, AbilitySpec->Level);
+				MarkAbilitySpecDirty(*AbilitySpec);
+			}
 		}
 	}
 }
@@ -284,11 +298,12 @@ bool UAuraAbilitySystemComponent::GetDescriptionByAbilityTag(const FGameplayTag&
 	{
 		OutDescription = FString();
 	}
-	else
+	else if (AbilityInfo)
 	{
 		OutDescription = UAuraGameplayAbility::GetLockedDescription(
 			AbilityInfo->FindAbilityInfoForTag(AbilityTag).LevelRequirement);
 	}
+
 	OutNextLevelDescription = FString();
 	return false;
 }

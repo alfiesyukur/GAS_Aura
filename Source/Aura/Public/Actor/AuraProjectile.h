@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/AuraAbilityTypes.h"
+#include "AuraAbilityTypes.h"
 #include "GameFramework/Actor.h"
 #include "AuraProjectile.generated.h"
 
