@@ -130,7 +130,7 @@ int32 AAuraCharacter::GetPlayerLevel_Implementation()
 
 void AAuraCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints)
 {
-	//TODO: Add AttributePoints to PlayerState
+	// TODO: Add AttributePoints to PlayerState
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
 	AuraPlayerState->AddToAttributePoints(InAttributePoints);
@@ -138,7 +138,7 @@ void AAuraCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints
 
 void AAuraCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
 {
-	//TODO: Add SpellPoints to PlayerState
+	// TODO: Add SpellPoints to PlayerState
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
 	AuraPlayerState->AddToSpellPoints(InSpellPoints);
@@ -162,7 +162,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
-
+	
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
 	Cast<UAuraAbilitySystemComponent>(AuraPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 
@@ -176,6 +176,8 @@ void AAuraCharacter::InitAbilityActorInfo()
 			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-	
+
+	OnAscRegistered.Broadcast(AbilitySystemComponent);
+
 	InitializeDefaultAttributes();
 }

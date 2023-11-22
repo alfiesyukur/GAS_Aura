@@ -8,7 +8,6 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "Aura/AuraLogChannel.h"
-#include "Interaction/CombatInterface.h"
 #include "Interaction/PlayerInterface.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
@@ -268,11 +267,12 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 Level)
 			else
 			{
 				FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(Info.AbilityTag);
-				
+
 				UE_LOG(LogAura, Log, TEXT("Ability: %s, Level: %d"), *AbilitySpec->Ability->GetName(),
 				       AbilitySpec->Ability->GetAbilityLevel());
-				
-				ClientUpdateAbilityStatus(Info.AbilityTag, FAuraGameplayTags::Get().Abilities_Status_Unlocked, AbilitySpec->Level);
+
+				ClientUpdateAbilityStatus(Info.AbilityTag, FAuraGameplayTags::Get().Abilities_Status_Unlocked,
+				                          AbilitySpec->Level);
 				MarkAbilitySpecDirty(*AbilitySpec);
 			}
 		}
@@ -352,7 +352,7 @@ void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
 
 void UAuraAbilitySystemComponent::ClientUpdateAbilityStatus_Implementation(const FGameplayTag& AbilityTag,
                                                                            const FGameplayTag& StatusTag,
-                                                                           int32 AbilityLevel)
+                                                                           const int32 AbilityLevel)
 {
 	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
@@ -361,7 +361,7 @@ void UAuraAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySys
                                                                      const FGameplayEffectSpec& EffectSpec,
                                                                      FActiveGameplayEffectHandle ActiveEffectHandle)
 {
-	FGameplayTagContainer TagContainer;
+	FGameplayTagContainer TagContainer = FGameplayTagContainer();
 	EffectSpec.GetAllAssetTags(TagContainer);
 	EffectAssetTags.Broadcast(TagContainer);
 }
