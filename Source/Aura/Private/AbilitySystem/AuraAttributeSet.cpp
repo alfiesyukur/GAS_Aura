@@ -9,7 +9,9 @@
 #include "Net/UnrealNetwork.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
-#include "Aura/AuraLogChannel.h"
+#include "Aura/Aura.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Interaction/CombatInterface.h"
 #include "Interaction/PlayerInterface.h"
 #include "Player/AuraPlayerController.h"
@@ -264,7 +266,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
 			if (CombatInterface)
 			{
-				CombatInterface->Die();
+				CombatInterface->Die(UAuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle));
 			}
 
 			SendXPEvent(Props);
@@ -273,6 +275,17 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		{
 			FGameplayTagContainer TagContainer;
 			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+			const FVector& KnockbackForce = UAuraAbilitySystemLibrary::GetKnockbackForce(Props.EffectContextHandle);
+
+			if (!KnockbackForce.IsNearlyZero(1.f))
+			{
+				const FVector startLine = Props.TargetCharacter->GetActorLocation();
+				const FVector endLine = (KnockbackForce.GetSafeNormal() * 100.f) + startLine;
+				DrawDebugLine(Props.TargetCharacter->GetWorld(), startLine, endLine, FColor::Yellow, false, 2.f, 0,
+				              4.f);
+				Props.TargetCharacter->LaunchCharacter(KnockbackForce, true, true);
+			}
+
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 		}
 
@@ -344,14 +357,14 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	//Please update your code to the new API before upgrading to the next release, otherwise your project will no longer compile.'
 	//Effect->InheritableOwnedTagsContainer.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);	
 
-	/** Like these! **/	
+	/** Like these! **/
 	UTargetTagsGameplayEffectComponent& TargetTagsGEComponent = Effect->FindOrAddComponent<
 		UTargetTagsGameplayEffectComponent>();
 	FInheritedTagContainer InheritedTagContainer = FInheritedTagContainer();
 	InheritedTagContainer.Added.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
 	TargetTagsGEComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
 	/** **/
-	
+
 	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	Effect->StackLimitCount = 1;
 
