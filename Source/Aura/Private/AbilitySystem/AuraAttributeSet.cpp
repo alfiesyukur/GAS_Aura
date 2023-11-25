@@ -253,6 +253,7 @@ void UAuraAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& O
 void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 {
 	const float LocalIncomingDamage = GetIncomingDamage();
+
 	SetIncomingDamage(0.f);
 
 	if (LocalIncomingDamage > 0.f)
@@ -263,8 +264,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bFatal = NewHealth <= 0.f;
 		if (bFatal)
 		{
-			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
-			if (CombatInterface)
+			if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor))
 			{
 				CombatInterface->Die(UAuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle));
 			}
@@ -276,12 +276,11 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			FGameplayTagContainer TagContainer;
 			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 			const FVector& KnockbackForce = UAuraAbilitySystemLibrary::GetKnockbackForce(Props.EffectContextHandle);
-
 			if (!KnockbackForce.IsNearlyZero(1.f))
 			{
 				const FVector startLine = Props.TargetCharacter->GetActorLocation();
 				const FVector endLine = (KnockbackForce.GetSafeNormal() * 100.f) + startLine;
-				DrawDebugLine(Props.TargetCharacter->GetWorld(), startLine, endLine, FColor::Yellow, false, 2.f, 0,
+				DrawDebugLine(Props.TargetCharacter->GetWorld(), startLine, endLine, FColor::Silver, false, 2.f, 0,
 				              4.f);
 				Props.TargetCharacter->LaunchCharacter(KnockbackForce, true, true);
 			}
