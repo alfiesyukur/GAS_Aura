@@ -64,7 +64,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 
-	UAuraAbilitySystemComponent* GetAsc();
+	UAuraAbilitySystemComponent* GetASC();
 
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;

@@ -49,7 +49,6 @@ class AURA_API ICombatInterface
 	GENERATED_BODY()
 
 public:
-	
 	UFUNCTION(BlueprintNativeEvent)
 	int32 GetPlayerLevel();
 
@@ -61,7 +60,7 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	UAnimMontage* GetHitReactMontage();
-	
+
 	virtual void Die(const FVector& DeathImpulse) = 0;
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
@@ -87,8 +86,11 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterClass GetCharacterClass();
-	
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void SetInShockLoop(bool bInLoop);
+
 	virtual FOnASCRegistered GetOnAscRegisteredDelegate() = 0;
-	
+
 	virtual FOnDeath GetOnDeathDelegate() = 0;
 };

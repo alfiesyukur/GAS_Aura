@@ -132,17 +132,18 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 		bTargeting = ThisActor ? true : false;
 		bAutoRunning = false;
 	}
+	if (GetASC()) GetASC()->AbilityInputTagPressed(InputTag);
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetAsc()) GetAsc()->AbilityInputTagReleased(InputTag);
+		if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
 
-	if (GetAsc()) GetAsc()->AbilityInputTagReleased(InputTag);
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 
 	if (!bTargeting && !bShiftKeyDown)
 	{
@@ -178,13 +179,13 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
 	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if (GetAsc()) GetAsc()->AbilityInputTagHeld(InputTag);
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 		return;
 	}
 
 	if (bTargeting || bShiftKeyDown)
 	{
-		if (GetAsc()) GetAsc()->AbilityInputTagHeld(InputTag);
+		if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
 	else
 	{
@@ -203,7 +204,7 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 }
 
 
-UAuraAbilitySystemComponent* AAuraPlayerController::GetAsc()
+UAuraAbilitySystemComponent* AAuraPlayerController::GetASC()
 {
 	if (AuraAbilitySystemComponent == nullptr)
 	{
