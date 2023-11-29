@@ -7,8 +7,9 @@ public class AuraEditorTarget : TargetRules
     public AuraEditorTarget(TargetInfo Target) : base(Target)
     {
         Type = TargetType.Editor;
-        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
-        DefaultBuildSettings = BuildSettingsVersion.V4;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
+        
         ExtraModuleNames.AddRange(new string[] { "Aura" });
     }
 }

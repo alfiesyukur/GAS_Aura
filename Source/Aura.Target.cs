@@ -7,8 +7,8 @@ public class AuraTarget : TargetRules
 	public AuraTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Game;
-        IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_3;
-        DefaultBuildSettings = BuildSettingsVersion.V4;
+        IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
 
 		ExtraModuleNames.AddRange( new string[] { "Aura" } );
 	}
