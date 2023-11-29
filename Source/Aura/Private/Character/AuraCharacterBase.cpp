@@ -21,16 +21,11 @@ AAuraCharacterBase::AAuraCharacterBase()
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	GetMesh()->SetCollisionResponseToChannel(ECC_PROJECTILE, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-}
-
-void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
@@ -156,6 +151,11 @@ ECharacterClass AAuraCharacterBase::GetCharacterClass_Implementation()
 FOnASCRegistered AAuraCharacterBase::GetOnAscRegisteredDelegate()
 {
 	return OnAscRegistered;
+}
+
+USkeletalMeshComponent* AAuraCharacterBase::GetWeapon_Implementation()
+{
+	return Weapon;
 }
 
 FOnDeath AAuraCharacterBase::GetOnDeathDelegate()

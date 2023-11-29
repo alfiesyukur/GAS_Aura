@@ -14,7 +14,7 @@ struct FTaggedMontage;
  * 
  */
 UCLASS()
-class UAuraDamageGameplayAbility : public UAuraGameplayAbility
+class AURA_API UAuraDamageGameplayAbility : public UAuraGameplayAbility
 {
 	GENERATED_BODY()
 

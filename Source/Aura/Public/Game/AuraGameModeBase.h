@@ -12,7 +12,7 @@ class UCharacterClassInfo;
  * 
  */
 UCLASS()
-class AAuraGameModeBase : public AGameModeBase
+class AURA_API AAuraGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	

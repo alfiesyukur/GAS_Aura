@@ -14,9 +14,7 @@ struct FDamageEffectParams
 {
 	GENERATED_BODY()
 
-	FDamageEffectParams()
-	{
-	}
+	FDamageEffectParams(){}
 
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<UObject> WorldContextObject = nullptr;
@@ -102,7 +100,7 @@ public:
 	}
 
 	/** Creates a copy of this context, used to duplicate for later modifications */
-	virtual FAuraGameplayEffectContext* Duplicate() const
+	virtual FAuraGameplayEffectContext* Duplicate() const override
 	{
 		FAuraGameplayEffectContext* NewContext = new FAuraGameplayEffectContext();
 		*NewContext = *this;
@@ -115,7 +113,7 @@ public:
 	}
 
 	/** Custom serialization, subclasses must override this */
-	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess);
+	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
 
 protected:
 	UPROPERTY()

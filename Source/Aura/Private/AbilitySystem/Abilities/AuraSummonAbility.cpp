@@ -1,6 +1,8 @@
 // Copyright sf5gaming.asia
 
 #include "AbilitySystem/Abilities/AuraSummonAbility.h"
+
+#include "Aura/Aura.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 TArray<FVector> UAuraSummonAbility::GetSpawnLocations()

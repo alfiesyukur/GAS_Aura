@@ -11,8 +11,7 @@
 
 
 void UOverlayWidgetController::BroadcastInitialValues()
-{	
-
+{
 	OnHealthChanged.Broadcast(GetAuraAS()->GetHealth());
 	OnMaxHealthChanged.Broadcast(GetAuraAS()->GetMaxHealth());
 	OnManaChanged.Broadcast(GetAuraAS()->GetMana());
@@ -22,12 +21,11 @@ void UOverlayWidgetController::BroadcastInitialValues()
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
 {
-	
 	GetAuraPS()->OnXPChangedDelegate.AddUObject(this, &UOverlayWidgetController::OnXPChanged);
 
-	GetAuraPS()->OnLevelChangedDelegate.AddLambda([this](int32 NewLevel)
+	GetAuraPS()->OnLevelChangedDelegate.AddLambda([this](int32 NewLevel, bool bLevelUp)
 	{
-		OnPlayerLevelChangedDelegate.Broadcast(NewLevel);
+		OnPlayerLevelChangedDelegate.Broadcast(NewLevel, bLevelUp);
 	});
 
 
@@ -95,7 +93,6 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 void UOverlayWidgetController::OnXPChanged(int32 NewXP)
 {
-
 	const ULevelUpInfo* LevelUpInfo = GetAuraPS()->LevelUpInfo;
 	checkf(LevelUpInfo, TEXT("Unabled to find LevelUpInfo, Please fill out AuraPlayerState Blueprint"));
 
@@ -125,9 +122,10 @@ void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag,
 	LastSlotInfo.StatusTag = GameplayTags.Abilities_Status_Unlocked;
 	LastSlotInfo.InputTag = PreviousSlot;
 	LastSlotInfo.AbilityTag = GameplayTags.Abilities_None;
-	
+
 	// Broadcast empty info if PreviousSlot is a valid slot. Only if equipping an already-equipped spell
 	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+	
 	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoForTag(AbilityTag);
 	Info.StatusTag = Status;
 	Info.InputTag = Slot;

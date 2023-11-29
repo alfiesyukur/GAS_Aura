@@ -167,8 +167,9 @@ TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& 
 	return Rotators;
 }
 
-TArray<FVector> UAuraAbilitySystemLibrary::EvenlyRotatedVectors(const FVector& Forward, const FVector Axis, float Spread,
-												 int32 NumVectors)
+TArray<FVector> UAuraAbilitySystemLibrary::EvenlyRotatedVectors(const FVector& Forward, const FVector Axis,
+                                                                float Spread,
+                                                                int32 NumVectors)
 {
 	TArray<FVector> Vectors;
 	if (NumVectors > 1)

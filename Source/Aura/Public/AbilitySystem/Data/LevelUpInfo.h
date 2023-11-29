@@ -12,14 +12,13 @@ struct FAuraLevelUpInfo
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly)
-	int32 LevelUpRequirement;
+	int32 LevelUpRequirement = 1;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 AttributePointAward = 1;
 
 	UPROPERTY(EditDefaultsOnly)
 	int32 SpellPointAward = 1;
-	
 };
 
 /**
