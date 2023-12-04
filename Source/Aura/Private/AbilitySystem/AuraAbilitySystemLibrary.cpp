@@ -6,6 +6,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraGameplayTags.h"
 #include "AuraAbilityTypes.h"
+#include "Aura/AuraLogChannel.h"
 #include "Game/AuraGameModeBase.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -386,9 +387,9 @@ void UAuraAbilitySystemLibrary::SetKnockbackForce(FGameplayEffectContextHandle& 
 }
 
 void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject,
-                                                        TArray<AActor*>& OutOverlappingActors,
-                                                        const TArray<AActor*>& ActorsToIgnore, float Radius,
-                                                        const FVector& SphereOrigin)
+                                                           TArray<AActor*>& OutOverlappingActors,
+                                                           const TArray<AActor*>& ActorsToIgnore, float Radius,
+                                                           const FVector& SphereOrigin)
 {
 	FCollisionQueryParams SphereParams;
 	SphereParams.AddIgnoredActors(ActorsToIgnore);
@@ -415,7 +416,7 @@ void UAuraAbilitySystemLibrary::GetLivePlayersWithinRadius(const UObject* WorldC
 }
 
 void UAuraAbilitySystemLibrary::GetClosestTargets(int32 MaxTargets, const TArray<AActor*>& Actors,
-	TArray<AActor*>& OutClosestTargets, const FVector& Origin)
+                                                  TArray<AActor*>& OutClosestTargets, const FVector& Origin)
 {
 	if (Actors.Num() <= MaxTargets)
 	{
@@ -466,7 +467,25 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
 
 	SetDeathImpulse(EffectContextHandle, DamageEffectParams.DeathImpulse);
-	SetKnockbackForce(EffectContextHandle, DamageEffectParams.KnockbackForce);
+
+	if (FMath::RandRange(1, 100) < DamageEffectParams.KnockbackChance)
+	{
+		SetKnockbackForce(EffectContextHandle, DamageEffectParams.KnockbackForce);
+	}
+	else
+	{
+		SetKnockbackForce(EffectContextHandle, FVector());
+	}
+
+	UE_LOG(LogAura, Warning, TEXT("Knockback Chance: %f from function: %hs"),
+	       DamageEffectParams.KnockbackChance, __FUNCTION__);
+
+	UE_LOG(LogAura, Warning, TEXT("Knockback Force Magnitude: %f from function: %hs"),
+	       DamageEffectParams.KnockbackForceMagnitude, __FUNCTION__);
+
+	UE_LOG(LogAura, Warning, TEXT("Knockback Force: %s from function: %hs"),
+	       *DamageEffectParams.KnockbackForce.ToString(), __FUNCTION__);
+
 
 	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
 		DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContextHandle);
@@ -483,5 +502,6 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	                                                              DamageEffectParams.DebuffFrequency);
 
 	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+
 	return EffectContextHandle;
 }

@@ -9,9 +9,6 @@
 #include "Net/UnrealNetwork.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
-#include "Aura/Aura.h"
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Interaction/CombatInterface.h"
 #include "Interaction/PlayerInterface.h"
 #include "Player/AuraPlayerController.h"
@@ -274,13 +271,16 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		else
 		{
 			FGameplayTagContainer TagContainer;
+
 			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+
 			const FVector& KnockbackForce = UAuraAbilitySystemLibrary::GetKnockbackForce(Props.EffectContextHandle);
+
 			if (!KnockbackForce.IsNearlyZero(1.f))
 			{
 				const FVector startLine = Props.TargetCharacter->GetActorLocation();
 				const FVector endLine = (KnockbackForce.GetSafeNormal() * 100.f) + startLine;
-				DrawDebugLine(Props.TargetCharacter->GetWorld(), startLine, endLine, FColor::Silver, false, 2.f, 0,
+				DrawDebugLine(Props.TargetCharacter->GetWorld(), startLine, endLine, FColor::Emerald, false, 2.f, 0,
 				              4.f);
 				Props.TargetCharacter->LaunchCharacter(KnockbackForce, true, true);
 			}
@@ -291,6 +291,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bBlock = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCriticalHit = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingText(Props, LocalIncomingDamage, bBlock, bCriticalHit);
+
 		if (UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
 		{
 			Debuff(Props);
@@ -303,7 +304,8 @@ void UAuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
 	const float LocalIncomingXP = GetIncomingXP();
 	SetIncomingXP(0.f);
 
-	// Source Character is the owner, since GA_ListenForEvents applies GE_EventBasedEffect, adding to IncomingXP
+	// Source Character is the owner, since GA_ListenForEvents applies GE_EventBasedEffect,
+	// adding to IncomingXP
 	if (Props.SourceCharacter->Implements<UPlayerInterface>() && Props.SourceCharacter->Implements<UCombatInterface>())
 	{
 		const int32 CurrentLevel = ICombatInterface::Execute_GetPlayerLevel(Props.SourceCharacter);
@@ -311,7 +313,9 @@ void UAuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
 
 		const int32 NewLevel = IPlayerInterface::Execute_FindLevelForXP(
 			Props.SourceCharacter, CurrentXP + LocalIncomingXP);
+
 		const int32 NumLevelUps = NewLevel - CurrentLevel;
+
 		if (NumLevelUps > 0)
 		{
 			const int32 AttributePointsReward = IPlayerInterface::Execute_GetAttributePointsReward(
@@ -360,7 +364,20 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	UTargetTagsGameplayEffectComponent& TargetTagsGEComponent = Effect->FindOrAddComponent<
 		UTargetTagsGameplayEffectComponent>();
 	FInheritedTagContainer InheritedTagContainer = FInheritedTagContainer();
-	InheritedTagContainer.Added.AddTag(GameplayTags.DamageTypesToDebuffs[DamageType]);
+
+	const FGameplayTag DebuffTag = GameplayTags.DamageTypesToDebuffs[DamageType];
+	
+	InheritedTagContainer.Added.AddTag(DebuffTag);
+	if (DebuffTag.MatchesTagExact(GameplayTags.Debuff_Stun))
+	{
+		InheritedTagContainer.Added.AddTag(GameplayTags.Player_Block_CursorTrace);
+		InheritedTagContainer.Added.AddTag(GameplayTags.Player_Block_InputHeld);
+		InheritedTagContainer.Added.AddTag(GameplayTags.Player_Block_InputPressed);
+		InheritedTagContainer.Added.AddTag(GameplayTags.Player_Block_InputReleased);
+	}
+
+	
+	
 	TargetTagsGEComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
 	/** **/
 

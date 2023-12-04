@@ -8,6 +8,7 @@
 #include "Aura/Aura.h"
 #include "NiagaraFunctionLibrary.h"
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Aura/AuraLogChannel.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
@@ -86,9 +87,13 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
 			const FVector ImpulseDirection = ImpulseRotator.Vector();
 
 			const FVector DeathImpulse = ImpulseDirection * DamageEffectParams.DeathImpulseMagnitude;
-			DamageEffectParams.DeathImpulse = DeathImpulse;
-			const bool bKnockback = FMath::RandRange(1, 100) < DamageEffectParams.KnockbackChance;
+			DamageEffectParams.DeathImpulse = DeathImpulse;		
 
+			FString Knockback_Chance = FString::Printf(TEXT("Knockback Chance: %f"), DamageEffectParams.KnockbackChance);
+			UE_LOG(LogAura, Warning, TEXT("Knockback Chance: %s"), *Knockback_Chance);
+			
+			const bool bKnockback = FMath::RandRange(0, 100) < DamageEffectParams.KnockbackChance;
+			
 			if (bKnockback)
 			{
 				FRotator Rotation = GetActorRotation();

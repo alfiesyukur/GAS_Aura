@@ -24,6 +24,8 @@ class AURA_API AAuraCharacterBase : public ACharacter, public IAbilitySystemInte
 
 public:
 	AAuraCharacterBase();
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
@@ -38,20 +40,31 @@ public:
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
-	virtual ECharacterClass GetCharacterClass_Implementation() override;	
+	virtual ECharacterClass GetCharacterClass_Implementation() override;
 	virtual FOnASCRegistered GetOnAscRegisteredDelegate() override;
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
-	virtual FOnDeath GetOnDeathDelegate() override;	
+	virtual FOnDeathSignature& GetOnDeathDelegate() override;
 	/** end Combat Interface */
 
 	FOnASCRegistered OnAscRegistered;
-	FOnDeath OnDeath;
-	
+	FOnDeathSignature OnDeathDelegate;
+
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath(const FVector& DeathImpulse);
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FTaggedMontage> AttackMontages;
+
+	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
+	bool bIsStunned = false;
+
+	UFUNCTION()
+	virtual void OnRep_Stunned();
+
+	// TODO: (parameter) const FGameplayTag callbackTag, check if can be passed by reference.
+	virtual void StunTagChanged(const FGameplayTag callbackTag, int32 NewCount);
+
+	
 
 protected:
 	virtual void BeginPlay() override;
@@ -70,6 +83,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	FName TailSocketName;
+	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	float BaseWalkSpeed = 250.f;	
 
 	bool bDead = false;
 
@@ -128,7 +144,6 @@ protected:
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
 private:
-	
 	UPROPERTY(EditAnywhere, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
 

@@ -18,6 +18,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StoreMousedataInfo(const FHitResult& HitResult);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrimaryTargetDied(AActor* DeadActor);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AdditionalTargetDied(AActor* DeadActor);
+
 	UFUNCTION(BlueprintCallable)
 	void StoreOwnerPlayerController();
 
