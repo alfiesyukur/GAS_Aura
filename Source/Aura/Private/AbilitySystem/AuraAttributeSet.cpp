@@ -265,17 +265,21 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			{
 				CombatInterface->Die(UAuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle));
 			}
-
 			SendXPEvent(Props);
 		}
 		else
 		{
-			FGameplayTagContainer TagContainer;
+			if (Props.TargetCharacter->Implements<UCombatInterface>() &&
+				!ICombatInterface::Execute_IsBeingShocked(Props.TargetCharacter))
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
 
-			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
-
-			const FVector& KnockbackForce = UAuraAbilitySystemLibrary::GetKnockbackForce(Props.EffectContextHandle);
-
+			const FVector& KnockbackForce =
+				UAuraAbilitySystemLibrary::GetKnockbackForce(Props.EffectContextHandle);
+			
 			if (!KnockbackForce.IsNearlyZero(1.f))
 			{
 				const FVector startLine = Props.TargetCharacter->GetActorLocation();
@@ -284,8 +288,6 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 				              4.f);
 				Props.TargetCharacter->LaunchCharacter(KnockbackForce, true, true);
 			}
-
-			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 		}
 
 		const bool bBlock = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
@@ -366,7 +368,7 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	FInheritedTagContainer InheritedTagContainer = FInheritedTagContainer();
 
 	const FGameplayTag DebuffTag = GameplayTags.DamageTypesToDebuffs[DamageType];
-	
+
 	InheritedTagContainer.Added.AddTag(DebuffTag);
 	if (DebuffTag.MatchesTagExact(GameplayTags.Debuff_Stun))
 	{
@@ -376,10 +378,8 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 		InheritedTagContainer.Added.AddTag(GameplayTags.Player_Block_InputReleased);
 	}
 
-	
-	
+
 	TargetTagsGEComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
-	/** **/
 
 	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	Effect->StackLimitCount = 1;
@@ -427,7 +427,6 @@ void UAuraAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldArmor) cons
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet, Armor, OldArmor);
 }
-
 
 void UAuraAttributeSet::OnRep_ArmorPenetration(const FGameplayAttributeData& OldArmorPenetration) const
 {

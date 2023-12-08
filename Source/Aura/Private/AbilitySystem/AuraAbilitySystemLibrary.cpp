@@ -465,9 +465,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	FGameplayEffectContextHandle EffectContextHandle = DamageEffectParams.SourceAbilitySystemComponent->
 	                                                                      MakeEffectContext();
 	EffectContextHandle.AddSourceObject(SourceAvatarActor);
-
 	SetDeathImpulse(EffectContextHandle, DamageEffectParams.DeathImpulse);
-
 	if (FMath::RandRange(1, 100) < DamageEffectParams.KnockbackChance)
 	{
 		SetKnockbackForce(EffectContextHandle, DamageEffectParams.KnockbackForce);
@@ -477,6 +475,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 		SetKnockbackForce(EffectContextHandle, FVector());
 	}
 
+	/*
 	UE_LOG(LogAura, Warning, TEXT("Knockback Chance: %f from function: %hs"),
 	       DamageEffectParams.KnockbackChance, __FUNCTION__);
 
@@ -485,23 +484,35 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 
 	UE_LOG(LogAura, Warning, TEXT("Knockback Force: %s from function: %hs"),
 	       *DamageEffectParams.KnockbackForce.ToString(), __FUNCTION__);
+	*/
 
 
 	const FGameplayEffectSpecHandle SpecHandle = DamageEffectParams.SourceAbilitySystemComponent->MakeOutgoingSpec(
-		DamageEffectParams.DamageGameplayEffectClass, DamageEffectParams.AbilityLevel, EffectContextHandle);
+		DamageEffectParams.DamageGameplayEffectClass,
+		DamageEffectParams.AbilityLevel,
+		EffectContextHandle);
 
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, DamageEffectParams.DamageType,
-	                                                              DamageEffectParams.BaseDamage);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Chance,
-	                                                              DamageEffectParams.DebuffChance);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Damage,
-	                                                              DamageEffectParams.DebuffDamage);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Duration,
-	                                                              DamageEffectParams.DebuffDuration);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, GameplayTags.Debuff_Frequency,
-	                                                              DamageEffectParams.DebuffFrequency);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+		SpecHandle,
+		DamageEffectParams.DamageType,
+		DamageEffectParams.BaseDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+		SpecHandle,
+		GameplayTags.Debuff_Chance,
+		DamageEffectParams.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+		SpecHandle,
+		GameplayTags.Debuff_Damage,
+		DamageEffectParams.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+		SpecHandle,
+		GameplayTags.Debuff_Duration,
+		DamageEffectParams.DebuffDuration);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(
+		SpecHandle,
+		GameplayTags.Debuff_Frequency,
+		DamageEffectParams.DebuffFrequency);
 
 	DamageEffectParams.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
-
 	return EffectContextHandle;
 }

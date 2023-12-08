@@ -26,6 +26,7 @@ void UAuraBeamSpell::StoreOwnerPlayerController()
 	if (CurrentActorInfo)
 	{
 		OwnerPlayerController = CurrentActorInfo->PlayerController.Get();
+		OwnerCharacter = Cast<ACharacter>(CurrentActorInfo->AvatarActor);
 	}
 }
 
@@ -79,7 +80,7 @@ void UAuraBeamSpell::TraceFirstTarget(const FVector& BeamTargetLocation)
 }
 
 void UAuraBeamSpell::StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTargets)
-{
+{	
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(GetAvatarActorFromActorInfo());
 	ActorsToIgnore.Add(MouseHitActor);
@@ -95,7 +96,8 @@ void UAuraBeamSpell::StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTarget
 	int32 NumAdditionalTargets = FMath::Min(GetAbilityLevel() - 1, MaxNumShockTargets); // temporary commented out?
 	//int32 NumAdditionalTargets = 5;
 
-	UAuraAbilitySystemLibrary::GetClosestTargets(NumAdditionalTargets, OverlappingActors,
+	UAuraAbilitySystemLibrary::GetClosestTargets(NumAdditionalTargets,
+	                                             OverlappingActors,
 	                                             OutAdditionalTargets,
 	                                             MouseHitActor->GetActorLocation());
 

@@ -146,8 +146,7 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 		Projectile->ProjectileMovement->HomingAccelerationMagnitude = FMath::FRandRange(
 			HomingAccelerationMin, HomingAccelerationMax);
 
-		Projectile->ProjectileMovement->bIsHomingProjectile = blaunchHomingProjectile;
-		
+		Projectile->ProjectileMovement->bIsHomingProjectile = blaunchHomingProjectile;		
 		Projectile->FinishSpawning(SpawnTransform);
 	}
 
